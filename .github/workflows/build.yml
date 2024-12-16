@@ -1,0 +1,65 @@
+name: BuildBaseExe
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            arch: linux/arm64
+            node_version: 20.18.0
+            ptrcompress: false
+          - os: ubuntu-20.04
+            arch: linux/amd64
+            node_version: 20.18.0
+            ptrcompress: false
+          - os: ubuntu-20.04
+            arch: linux/amd64
+            node_version: 20.18.0
+            ptrcompress: true
+          - os: windows-2019
+            node_version: 20.18.0
+            ptrcompress: false
+          - os: windows-2019
+            node_version: 20.18.0
+            ptrcompress: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+          architecture: x64
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Install NASM
+        if: runner.os == 'Windows'
+        run: choco install nasm -y
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up Docker for multi-platform
+        if: runner.os == 'Linux'
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      # - name: Build base node binaries
+      #   run: |
+      #     node js2bin.js --ci --container=true --pointer-compress=${{ matrix.ptrcompress }} --node=${{ matrix.node_version }} --size=6MB --size=4MB --upload --clean ${ARCH:+--arch=$ARCH}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+      #     ARCH: ${{ matrix.arch }}
