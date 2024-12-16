@@ -276,8 +276,10 @@ class NodeJsBuilder {
       .then(() => this.prepareNodeJsBuild())
       .then(() => {
         if (isWindows) { 
-          log('Before make call');
-          return runCommand(this.make, makeArgs, this.nodeSrcDir);
+          log(`Before make call make=${this.make} makeArgs=${makeArgs} srcDir=${this.nodeSrcDir}`);
+          const resMake = runCommand(this.make, makeArgs, this.nodeSrcDir);
+          log(`After make call`);
+          return resMake;
         }
         if (isDarwin) {
           return runCommand(this.configure, configArgs, this.nodeSrcDir)

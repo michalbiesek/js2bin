@@ -69,7 +69,10 @@ function runCommand(command, args = [], cwd = undefined, env = undefined, verbos
       env: env || { ...process.env },
       stdio: verbose ? 'inherit' : 'ignore'
     })
-      .once('error', reject)
+      .once('error', (err) => {
+        log(`Error: ${command} ${args.join(' ')} ${err}`);
+        reject('dupa');
+      })
       .once('close', (code) => {
         if (code !== 0) {
           reject(new Error(`${command} ${args.join(' ')} exited with code: ${code}`));
