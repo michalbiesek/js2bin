@@ -42,7 +42,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.9
+      - name: Set up Python 3.9 ff
         uses: actions/setup-python@v5
         with:
           python-version: 3.9
@@ -65,9 +65,9 @@ jobs:
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-      # - name: Build base node binaries
-      #   run: |
-      #     node js2bin.js --ci --container=true --pointer-compress=${{ matrix.ptrcompress }} --node=${{ matrix.node_version }} --size=6MB --size=4MB --upload --clean ${ARCH:+--arch=$ARCH}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
-      #     ARCH: ${{ matrix.arch }}
+      - name: Build base node binaries
+        run: |
+          node js2bin.js --ci --container=true --pointer-compress=${{ matrix.ptrcompress }} --node=${{ matrix.node_version }} --size=6MB --size=4MB --upload --clean ${ARCH:+--arch=$ARCH}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          ARCH: ${{ matrix.arch }}

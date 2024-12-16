@@ -108,7 +108,7 @@ class NodeJsBuilder {
       log(`build name=${name} already downloaded, using it`);
       return Promise.resolve(filename);
     }
-    const baseUrl = `https://github.com/criblio/js2bin/releases/download/v${pkg.version}/`;
+    const baseUrl = `https://github.com/michalbiesek/js2bin/releases/download/v${pkg.version}/`;
     const url = `${baseUrl}${name}`;
     return download(url, filename);
   }
@@ -134,7 +134,7 @@ class NodeJsBuilder {
       Authorization: 'token ' + process.env.GITHUB_TOKEN
     };
     return p
-      .then(() => fetch(`https://api.github.com/repos/criblio/js2bin/releases/tags/v${pkg.version}`, headers))
+      .then(() => fetch(`https://api.github.com/repos/michalbiesek/js2bin/releases/tags/v${pkg.version}`, headers))
       .then(JSON.parse)
       .then(p => p.upload_url.split('{')[0])
       .then(baseUrl => {
@@ -233,7 +233,7 @@ class NodeJsBuilder {
   }
 
   buildInContainer() {
-    const containerTag = `mb/js2bin-builder:${this.builderImageVersion}`;
+    const containerTag = `criblio/js2bin-builder:${this.builderImageVersion}`;
     return runCommand(
         'docker', ['run',
           '-v', `${process.cwd()}:/js2bin/`,
@@ -245,7 +245,7 @@ class NodeJsBuilder {
   }
 
   buildInContainerNonX64(arch) {
-    const containerTag = `mb/js2bin-builder:${this.builderImageVersion}-nonx64`;
+    const containerTag = `criblio/js2bin-builder:${this.builderImageVersion}-nonx64`;
     return runCommand(
         'docker', ['run',
           '--platform', arch,
