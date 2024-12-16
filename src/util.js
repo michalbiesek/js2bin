@@ -69,7 +69,10 @@ function runCommand(command, args = [], cwd = undefined, env = undefined, verbos
       env: env || { ...process.env },
       stdio: verbose ? 'inherit' : 'ignore'
     })
-      .once('error', reject)
+      .once('error', (err) => {
+        log(`Error: ${command} ${args.join(' ')} ${err}`);
+        reject('dupa');
+      })
       .once('close', (code) => {
         if (code !== 0) {
           reject(new Error(`${command} ${args.join(' ')} exited with code: ${code}`));
@@ -96,7 +99,7 @@ async function patchFile(file, patchFile) {
         ]
       })
       .once('exit', code => {
-        if (code !== 0) return reject(new Error(`falied to patch file=${file} with patch=${patchFile} code=${code}`));
+        if (code !== 0) return reject(new Error(`failed to patch file=${file} with patch=${patchFile} code=${code}`));
         return resolve();
       })
       .once('error', reject);

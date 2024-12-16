@@ -6,6 +6,6 @@ fi
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 docker buildx use js2bin-builder
 BUILDER_IMAGE_VERSION="2"
-docker buildx build -t "mb/js2bin-builder:${BUILDER_IMAGE_VERSION}-nonx64" --platform linux/arm64/v8 --push -f Dockerfile.centos7.arm64 .
-docker build -t "mb/js2bin-builder:${BUILDER_IMAGE_VERSION}" -f Dockerfile.centos7 .
-# docker push "mb/js2bin-builder:${BUILDER_IMAGE_VERSION}"
+docker buildx build -t "michalbiesek/js2bin-builder:${BUILDER_IMAGE_VERSION}-nonx64" --platform linux/arm64/v8 --push -f Dockerfile.centos7.arm64 .
+docker build -t "michalbiesek/js2bin-builder:${BUILDER_IMAGE_VERSION}" -f Dockerfile.centos7 .
+# docker push "michalbiesek/js2bin-builder:${BUILDER_IMAGE_VERSION}"
