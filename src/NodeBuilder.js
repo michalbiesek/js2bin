@@ -82,6 +82,7 @@ class NodeJsBuilder {
   }
 
   downloadExpandNodeSource() {
+    log(`downloadExpandNodeSource started`);
     const url = `https://nodejs.org/dist/v${this.version}/node-v${this.version}.tar.gz`;
     if (fs.existsSync(this.nodePath('configure'))) {
       log(`node version=${this.version} already downloaded and expanded, using it`);
@@ -175,6 +176,7 @@ class NodeJsBuilder {
   prepareNodeJsBuild() {
     // install _third_party_main.js
     // install app_main.js
+    log(`prepareNodeJsBuild started`);
     const appMainPath = this.nodePath('lib', '_js2bin_app_main.js');
     return Promise.resolve()
       .then(() => copyFileAsync(
@@ -273,7 +275,10 @@ class NodeJsBuilder {
       .then(() => this.downloadExpandNodeSource())
       .then(() => this.prepareNodeJsBuild())
       .then(() => {
-        if (isWindows) { return runCommand(this.make, makeArgs, this.nodeSrcDir); }
+        if (isWindows) { 
+          log('Before make call');
+          return runCommand(this.make, makeArgs, this.nodeSrcDir);
+        }
         if (isDarwin) {
           return runCommand(this.configure, configArgs, this.nodeSrcDir)
             .then(() => runCommand(this.make, makeArgs, this.nodeSrcDir));
