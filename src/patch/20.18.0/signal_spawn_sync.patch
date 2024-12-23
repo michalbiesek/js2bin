@@ -1,0 +1,20 @@
+--- src/spawn_sync.cc
++++ src/spawn_sync.cc
+@@ -613,7 +613,7 @@ void SyncProcessRunner::Kill() {
+   // a signal to the process, however we will still close our end of the stdio
+   // pipes so this situation won't make us hang.
+   if (exit_status_ < 0) {
+-    int r = uv_process_kill(&uv_process_, kill_signal_);
++    int r = uv_process_kill(&uv_process_, kill_signal_, -1);
+ 
+     // If uv_kill failed with an error that isn't ESRCH, the user probably
+     // specified an invalid or unsupported signal. Signal this to the user as
+@@ -623,7 +623,7 @@ void SyncProcessRunner::Kill() {
+ 
+       // Deliberately ignore the return value, we might not have
+       // sufficient privileges to signal the child process.
+-      USE(uv_process_kill(&uv_process_, SIGKILL));
++      USE(uv_process_kill(&uv_process_, SIGKILL, -1));
+     }
+   }
+ 

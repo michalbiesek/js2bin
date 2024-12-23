@@ -1,0 +1,20 @@
+--- deps/uv/include/uv.h
++++ deps/uv/include/uv.h
+@@ -409,7 +409,7 @@ typedef void (*uv_fs_poll_cb)(uv_fs_poll_t* handle,
+                               const uv_stat_t* prev,
+                               const uv_stat_t* curr);
+ 
+-typedef void (*uv_signal_cb)(uv_signal_t* handle, int signum);
++typedef void (*uv_signal_cb)(uv_signal_t* handle, int signum, uv_pid_t pid, int uid, int sigvalue, int sigcode);
+ 
+ 
+ typedef enum {
+@@ -1122,8 +1122,8 @@ struct uv_process_s {
+ UV_EXTERN int uv_spawn(uv_loop_t* loop,
+                        uv_process_t* handle,
+                        const uv_process_options_t* options);
+-UV_EXTERN int uv_process_kill(uv_process_t*, int signum);
+-UV_EXTERN int uv_kill(int pid, int signum);
++UV_EXTERN int uv_process_kill(uv_process_t*, int signum, int sigval);
++UV_EXTERN int uv_kill(int pid, int signum, int sigval);
+ UV_EXTERN uv_pid_t uv_process_get_pid(const uv_process_t*);

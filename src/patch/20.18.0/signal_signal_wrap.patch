@@ -1,0 +1,25 @@
+--- src/signal_wrap.cc
++++ src/signal_wrap.cc
+@@ -120,13 +120,19 @@ class SignalWrap : public HandleWrap {
+ #endif
+     int err = uv_signal_start(
+         &wrap->handle_,
+-        [](uv_signal_t* handle, int signum) {
++        [](uv_signal_t* handle, int signum, uv_pid_t pid, int uid, int sigvalue, int sigcode) {
+           SignalWrap* wrap = ContainerOf(&SignalWrap::handle_, handle);
+           Environment* env = wrap->env();
+           HandleScope handle_scope(env->isolate());
+           Context::Scope context_scope(env->context());
+-          Local<Value> arg = Integer::New(env->isolate(), signum);
+-          wrap->MakeCallback(env->onsignal_string(), 1, &arg);
++          Local<Value> argv[5] = {
++            Integer::New(env->isolate(), signum),
++            Integer::New(env->isolate(), pid),
++            Integer::New(env->isolate(), uid),
++            Integer::New(env->isolate(), sigvalue),
++            Integer::New(env->isolate(), sigcode)
++          };
++          wrap->MakeCallback(env->onsignal_string(), arraysize(argv), argv);
+         },
+         signum);
+

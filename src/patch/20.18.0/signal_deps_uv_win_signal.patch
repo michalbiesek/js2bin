@@ -1,0 +1,11 @@
+--- deps/uv/src/win/signal.c
++++ deps/uv/src/win/signal.c
+@@ -246,7 +246,7 @@ void uv__process_signal_req(uv_loop_t* loop, uv_signal_t* handle,
+    * These can get out of sync when the handler is stopped and restarted while
+    * the signal_req is pending. */
+   if (dispatched_signum == handle->signum)
+-    handle->signal_cb(handle, dispatched_signum);
++    handle->signal_cb(handle, dispatched_signum, -1, -1, -1, -1);
+ 
+   if (handle->flags & UV_SIGNAL_ONE_SHOT)
+     uv_signal_stop(handle);

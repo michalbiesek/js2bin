@@ -1,0 +1,12 @@
+--- src/process_wrap.cc
++++ src/process_wrap.cc
+@@ -312,7 +312,8 @@ class ProcessWrap : public HandleWrap {
+     ProcessWrap* wrap;
+     ASSIGN_OR_RETURN_UNWRAP(&wrap, args.This());
+     int signal = args[0]->Int32Value(env->context()).FromJust();
+-    int err = uv_process_kill(&wrap->process_, signal);
++    int sigVal = args[0]->Int32Value(env->context()).FromJust();
++    int err = uv_process_kill(&wrap->process_, sigVal);
+     args.GetReturnValue().Set(err);
+   }
+ 

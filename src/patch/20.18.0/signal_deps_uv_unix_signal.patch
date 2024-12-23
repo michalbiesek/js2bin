@@ -1,0 +1,55 @@
+--- deps/uv/src/unix/signal.c
++++ deps/uv/src/unix/signal.c
+@@ -35,6 +35,10 @@
+ typedef struct {
+   uv_signal_t* handle;
+   int signum;
++  uv_pid_t pid;
++  int uid;
++  int sigvalue;
++  int sigcode;
+ } uv__signal_msg_t;
+ 
+ RB_HEAD(uv__signal_tree_s, uv_signal_s);
+@@ -180,7 +184,7 @@ static uv_signal_t* uv__signal_first_handle(int signum) {
+ }
+ 
+ 
+-static void uv__signal_handler(int signum) {
++static void uv__signal_handler(int signum, siginfo_t *info, void *context) {
+   uv__signal_msg_t msg;
+   uv_signal_t* handle;
+   int saved_errno;
+@@ -200,6 +204,12 @@ static void uv__signal_handler(int signum) {
+ 
+     msg.signum = signum;
+     msg.handle = handle;
++    if (info) {
++      msg.pid = info->si_pid;
++      msg.uid = info->si_uid;
++      msg.sigvalue = info->si_value.sival_int;
++      msg.sigcode = info->si_code;
++    }
+ 
+     /* write() should be atomic for small data chunks, so the entire message
+      * should be written at once. In theory the pipe could become full, in
+@@ -229,8 +239,8 @@ static int uv__signal_register_handler(int signum, int oneshot) {
+   memset(&sa, 0, sizeof(sa));
+   if (sigfillset(&sa.sa_mask))
+     abort();
+-  sa.sa_handler = uv__signal_handler;
+-  sa.sa_flags = SA_RESTART;
++  sa.sa_sigaction = uv__signal_handler;
++  sa.sa_flags = SA_SIGINFO | SA_RESTART;
+   if (oneshot)
+     sa.sa_flags |= SA_RESETHAND;
+ 
+@@ -460,7 +470,7 @@ static void uv__signal_event(uv_loop_t* loop,
+ 
+       if (msg->signum == handle->signum) {
+         assert(!(handle->flags & UV_HANDLE_CLOSING));
+-        handle->signal_cb(handle, handle->signum);
++        handle->signal_cb(handle, handle->signum, msg->pid, msg->uid, msg->sigvalue, msg->sigcode);
+       }
+ 
+       handle->dispatched_signals++;
