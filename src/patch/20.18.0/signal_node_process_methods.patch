@@ -1,0 +1,19 @@
+--- src/node_process_methods.cc
++++ src/node_process_methods.cc
+@@ -157,6 +157,8 @@ static void Kill(const FunctionCallbackInfo<Value>& args) {
+   if (!args[0]->Int32Value(context).To(&pid)) return;
+   int sig;
+   if (!args[1]->Int32Value(context).To(&sig)) return;
++  int sigval;
++  if (!args[2]->Int32Value(context).To(&sigval));
+ 
+   uv_pid_t own_pid = uv_os_getpid();
+   if (sig > 0 &&
+@@ -167,7 +169,7 @@ static void Kill(const FunctionCallbackInfo<Value>& args) {
+     RunAtExit(env);
+   }
+ 
+-  int err = uv_kill(pid, sig);
++  int err = uv_kill(pid, sig, sigval);
+   args.GetReturnValue().Set(err);
+ }

@@ -222,9 +222,52 @@ class NodeJsBuilder {
       join(this.patchDir, 'no_rand_on_glibc.patch'));
   }
 
+  async patchSignal() {
+    await patchFile(
+      this.nodePath('deps', 'uv', 'src', 'unix', 'process.c'),
+      join(this.patchDir, 'signal_deps_uv_unix_process.patch'));
+
+    await patchFile(
+      this.nodePath('deps', 'uv', 'src', 'unix', 'signal.c'),
+      join(this.patchDir, 'signal_deps_uv_unix_signal.patch'));
+
+    await patchFile(
+      this.nodePath('deps', 'uv', 'include', 'uv.h'),
+      join(this.patchDir, 'signal_deps_uv_uv.patch'));
+
+    await patchFile(
+      this.nodePath('deps', 'uv', 'src', 'win', 'process.c'),
+      join(this.patchDir, 'signal_deps_uv_win_process.patch'));
+
+    await patchFile(
+      this.nodePath('deps', 'uv', 'src', 'win', 'signal.c'),
+      join(this.patchDir, 'signal_deps_uv_win_signal.patch'));
+
+    await patchFile(
+      this.nodePath('deps', 'uvwasi', 'src', 'uvwasi.c'),
+      join(this.patchDir, 'signal_deps_uvwasi.patch'));
+
+    await patchFile(
+      this.nodePath('src', 'node_process_methods.cc'),
+      join(this.patchDir, 'signal_node_process_methods.patch'));
+
+    await patchFile(
+      this.nodePath('src', 'process_wrap.cc'),
+      join(this.patchDir, 'signal_process_wrap.patch'));
+
+    await patchFile(
+      this.nodePath('src', 'signal_wrap.cc'),
+      join(this.patchDir, 'signal_signal_wrap.patch'));
+
+    await patchFile(
+      this.nodePath('src', 'spawn_sync.cc'),
+      join(this.patchDir, 'signal_spawn_sync.patch'));
+  }
+
   async applyPatches() {
     await this.patchThirdPartyMain();
     await this.patchNodeCompileIssues();
+    await this.patchSignal();
   }
 
   printDiskUsage() {
