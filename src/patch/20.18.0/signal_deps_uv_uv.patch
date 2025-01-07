@@ -1,0 +1,11 @@
+--- deps/uv/include/uv.h
++++ deps/uv/include/uv.h
+@@ -409,7 +409,7 @@ typedef void (*uv_fs_poll_cb)(uv_fs_poll_t* handle,
+                               const uv_stat_t* prev,
+                               const uv_stat_t* curr);
+ 
+-typedef void (*uv_signal_cb)(uv_signal_t* handle, int signum);
++typedef void (*uv_signal_cb)(uv_signal_t* handle, int signum, uv_pid_t pid, int uid, int sigvalue, int sigcode);
+ 
+ 
+ typedef enum {
