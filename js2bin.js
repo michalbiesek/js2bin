@@ -36,6 +36,7 @@ command-args: take the form of --name=value
   --container: (opt) build using builder container rather than local dev tools
   --arch:      (opt) build on a specific architecture
   --pointer-compress:  (opt) whether to enable pointer compression
+  --windDestPath: (opt) Windows destination path of build (default d:)
 
 --help: print this help message
 `);
@@ -72,6 +73,7 @@ function parseArgs() {
   args.platform = (args.platform || NodeJsBuilder.platform());
   args.container = (args.container || false);
   args.ptrCompression = (args['pointer-compress'] == 'true');
+  args.windDestPath = (args.windDestPath || 'd:');
   return args;
 }
 
@@ -116,7 +118,7 @@ if (args.build) {
         lastBuilder = builder;
         p = p.then(() => {
           log(`building for version=${version}, size=${size} arch=${arch}`);
-          return builder.buildFromSource(args.upload, args.cache, args.container, arch, args.ptrCompression);
+          return builder.buildFromSource(args.upload, args.cache, args.container, arch, args.ptrCompression, args.windDestPath);
         });
       })
     });

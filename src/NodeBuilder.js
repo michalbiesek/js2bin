@@ -10,7 +10,6 @@ const pkg = require('../package.json');
 const isWindows = process.platform === 'win32';
 const isDarwin = process.platform === 'darwin';
 const isLinux = process.platform === 'linux';
-const driveLetter = process.env.DRIVE_TO_CHECK || 'c:';
 
 const prettyPlatform = {
   win32: 'windows',
@@ -233,8 +232,8 @@ class NodeJsBuilder {
     await this.patchNodeCompileIssues();
   }
 
-  printDiskUsage() {
-    if (isWindows) { return runCommand('fsutil', ['volume', 'diskfree', driveLetter]); }
+  printDiskUsage(windDestPath) {
+    if (isWindows) { return runCommand('fsutil', ['volume', 'diskfree', windDestPath]); }
     return runCommand('df', ['-h']);
   }
 
@@ -268,14 +267,14 @@ class NodeJsBuilder {
   // 3. install _third_party_main.js
   // 4. process mainAppFile (gzip, base64 encode it) - could be a placeholder file
   // 5. kick off ./configure & build
-  buildFromSource(uploadBuild, cache, container, arch, ptrCompression) {
+  buildFromSource(uploadBuild, cache, container, arch, ptrCompression, windDestPath) {
     const makeArgs = isWindows ? ['x64', 'no-cctest', 'clang-cl'] : [`-j${os.cpus().length}`];
     const configArgs = [];
     if(ptrCompression) {
       if(isWindows) makeArgs.push('v8_ptr_compress');
       else          configArgs.push('--experimental-enable-pointer-compression');
     }
-    return this.printDiskUsage()
+    return this.printDiskUsage(windDestPath)
       .then(() => this.downloadExpandNodeSource())
       .then(() => this.prepareNodeJsBuild())
       .then(() => {
@@ -306,13 +305,13 @@ class NodeJsBuilder {
         return this.buildInContainer(ptrCompression);
       })
       .then(() => this.uploadNodeBinary(undefined, uploadBuild, cache, arch, ptrCompression))
-      .then(() => this.printDiskUsage())
+      .then(() => this.printDiskUsage(windDestPath))
       // .then(() => this.cleanupBuild().catch(err => log(err)))
       .then(() => {
         log(`RESULTS: ${this.resultFile}`);
         return this.resultFile;
       })
-      .catch(err => this.printDiskUsage().then(() => { throw err; }));
+      .catch(err => this.printDiskUsage(windDestPath).then(() => { throw err; }));
   }
 
   buildFromCached(platform = 'linux', arch = 'x64', outFile = undefined, cache = false, size) {
