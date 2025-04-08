@@ -10,7 +10,7 @@ const pkg = require('../package.json');
 const isWindows = process.platform === 'win32';
 const isDarwin = process.platform === 'darwin';
 const isLinux = process.platform === 'linux';
-const driveLetter = process.env.DRIVE_TO_CHECK || 'd:';
+const driveLetter = process.env.DRIVE_TO_CHECK || 'c:';
 
 const prettyPlatform = {
   win32: 'windows',
