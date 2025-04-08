@@ -10,6 +10,7 @@ const pkg = require('../package.json');
 const isWindows = process.platform === 'win32';
 const isDarwin = process.platform === 'darwin';
 const isLinux = process.platform === 'linux';
+const driveLetter = process.env.DRIVE_TO_CHECK || 'd:';
 
 const prettyPlatform = {
   win32: 'windows',
@@ -233,7 +234,7 @@ class NodeJsBuilder {
   }
 
   printDiskUsage() {
-    if (isWindows) { return runCommand('fsutil', ['volume', 'diskfree', 'd:']); }
+    if (isWindows) { return runCommand('fsutil', ['volume', 'diskfree', driveLetter]); }
     return runCommand('df', ['-h']);
   }
 
