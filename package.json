@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/criblio/js2bin.git"
+    "url": "git+https://github.com/michalbiesek/js2bin.git"
   },
   "keywords": [
     "js2bin",
@@ -22,9 +22,9 @@
   "author": "Cribl Inc",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/criblio/js2bin/issues"
+    "url": "https://github.com/michalbiesek/js2bin/issues"
   },
-  "homepage": "https://github.com/criblio/js2bin#readme",
+  "homepage": "https://github.com/michalbiesek/js2bin#readme",
   "dependencies": {
     "tar-fs": "^2.1.0"
   },
