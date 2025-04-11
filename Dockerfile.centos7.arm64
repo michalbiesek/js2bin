@@ -21,16 +21,19 @@ RUN yum-config-manager --enable rhel-server-rhscl-7-rpms && \
     ln -s /node-v10.23.0-linux-arm64/bin/node /bin/node && \ 
     ln -s /node-v10.23.0-linux-arm64/bin/npm /bin/npm
 
-# Build and install Python 3.9 as a prerequisite for building Node.js 24
 RUN PYTHON_VERSION=3.9.22 && \
     wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
-    tar -xvf Python-$PYTHON_VERSION.tgz && \
-    cd Python-$PYTHON_VERSION && \
-    ./configure --prefix=/usr/local && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf Python-$PYTHON_VERSION.tgz Python-$PYTHON_VERSION
+    tar -xvf Python-$PYTHON_VERSION.tgz
+# Build and install Python 3.9 as a prerequisite for building Node.js 24
+# RUN PYTHON_VERSION=3.9.22 && \
+#     wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
+#     tar -xvf Python-$PYTHON_VERSION.tgz && \
+#     cd Python-$PYTHON_VERSION && \
+#     ./configure --prefix=/usr/local && \
+#     make && \
+#     make install && \
+#     cd .. && \
+#     rm -rf Python-$PYTHON_VERSION.tgz Python-$PYTHON_VERSION
 
 
 # to buid using this container you need to enable the right slc toolchain ie
