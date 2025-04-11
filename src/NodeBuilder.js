@@ -238,7 +238,7 @@ class NodeJsBuilder {
   }
 
   buildInContainer() {
-    const containerTag = `cribl/js2bin-builder:${this.builderImageVersion}`;
+    const containerTag = `mbiesekcribl/js2bin-builder:${this.builderImageVersion}`;
     return runCommand(
         'docker', ['run',
           '-v', `${process.cwd()}:/js2bin/`,
@@ -250,7 +250,7 @@ class NodeJsBuilder {
   }
 
   buildInContainerNonX64(arch) {
-    const containerTag = `cribl/js2bin-builder:${this.builderImageVersion}-nonx64`;
+    const containerTag = `mbiesekcribl/js2bin-builder:${this.builderImageVersion}-nonx64`;
     return runCommand(
         'docker', ['run',
           '--platform', arch,
