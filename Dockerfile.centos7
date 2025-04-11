@@ -27,9 +27,11 @@ RUN wget https://www.python.org/ftp/python/3.9.21/Python-3.9.21.tgz && \
     tar -xvf Python-3.9.21.tgz && \
     cd Python-3.9.21 && \
     ./configure --prefix=/usr/local && \
-    make && \
-    make altinstall && \
-    ln -fs /usr/bin/python3 /usr/bin/python
+    make
+
+RUN make altinstall
+
+#RUN ln -fs /usr/bin/python3 /usr/bin/python
 
 # before building using this container you need to enable the right slc toolchain ie
 # scl enable devtoolset-8 '<your-build-command-here>'
